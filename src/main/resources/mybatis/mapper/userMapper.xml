@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.jdbcoracledemo.dao.UserMapper">
+
+    <insert id="insert">
+        INSERT INTO TB_USER (ID,NAME) values (#{id}, #{name})
+    </insert>
+
+    <select id="getById" resultType="com.example.jdbcoracledemo.pojo.User">
+        SELECT * FROM TB_USER WHERE ID = #{id}
+    </select>
+
+    <select id="getByList" resultType="com.example.jdbcoracledemo.pojo.User">
+        SELECT * FROM TB_USER WHERE ID in
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="getByListStr" resultType="com.example.jdbcoracledemo.pojo.User">
+        select * from TB_USER tu inner join (
+            SELECT REGEXP_SUBSTR(#{listStr},'[^,]+',1,LEVEL) AS str
+            FROM DUAL
+            CONNECT BY  LEVEL &lt;= LENGTH(#{listStr})-LENGTH(REGEXP_REPLACE(#{listStr},',','')) + 1
+        )temp
+        on tu.id=temp.str
+    </select>
+
+    <select id="getByListTuple" resultType="com.example.jdbcoracledemo.pojo.User">
+        SELECT * FROM TB_USER WHERE (1,ID) in
+        <foreach collection="ids" item="item" separator="," open="(" close=")">
+            (1,#{item})
+        </foreach>
+    </select>
+
+    <select id="getByList3" resultType="com.example.jdbcoracledemo.pojo.User">
+        SELECT * FROM TB_USER tu inner join(
+        <foreach collection="ids" item="item" separator="union" index="index">
+            select #{item} as id from dual
+        </foreach>
+        ) temp
+        on tu.id=temp.id
+    </select>
+
+</mapper>
