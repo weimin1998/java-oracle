@@ -44,4 +44,14 @@
         on tu.id=temp.id
     </select>
 
+    <select id="getByList4" resultType="com.example.jdbcoracledemo.pojo.User">
+        SELECT * FROM TB_USER WHERE ID in
+        (
+            SELECT * FROM TABLE(sys.odcivarchar2list(
+                <foreach collection="ids" item="item" separator="," >
+                    #{item}
+                </foreach>
+            ))
+        )
+    </select>
 </mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.jdbcoracledemo.dao.TaskMapper">
+
+
+    <select id="getTasks" resultType="com.example.jdbcoracledemo.pojo.Task">
+        SELECT t.id, t.channel , t.review_status as reviewStatus
+        FROM TB_TASK t WHERE 1=1
+
+        <if test="vo.channel!=null and vo.channel==0">
+            and (t.channel=#{vo.channel} or t.channel is null)
+        </if>
+
+        <if test="vo.channel!=null and vo.channel==1">
+            and t.channel=#{vo.channel}
+        </if>
+
+
+        <if test="vo.reviewStatus!=null and vo.reviewStatus!=''">
+            and t.review_status = #{vo.reviewStatus}
+        </if>
+
+        <if test="vo.reviewStatus==null or vo.reviewStatus==''">
+            and (t.review_status = 4 or t.review_status = 5)
+        </if>
+
+    </select>
+
+</mapper>

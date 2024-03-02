@@ -1,6 +1,9 @@
 package com.example.jdbcoracledemo;
 
+import com.example.jdbcoracledemo.dao.TaskMapper;
 import com.example.jdbcoracledemo.dao.UserMapper;
+import com.example.jdbcoracledemo.pojo.Task;
+import com.example.jdbcoracledemo.pojo.TaskVO;
 import com.example.jdbcoracledemo.pojo.User;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -103,6 +106,20 @@ class JdbcOracleDemoApplicationTests {
         System.out.println(users.size());
 
     }
+
+    @Test
+    public void getByList4() {
+        List<Integer> ids = getIds();
+
+        long start = System.currentTimeMillis();
+        List<User> users = userMapper.getByList4(ids);
+        long end = System.currentTimeMillis();
+
+        System.out.println(end-start);
+        System.out.println(users);
+        System.out.println(users.size());
+
+    }
     private static List<Integer> getIds() {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < 4000; i++) {
@@ -114,4 +131,19 @@ class JdbcOracleDemoApplicationTests {
     }
 
 
+
+    @Autowired
+    TaskMapper taskMapper;
+    @Test
+    public void getTasks(){
+        TaskVO taskVO = new TaskVO();
+
+        taskVO.setChannel(0L);
+        taskVO.setReviewStatus(4L);
+        List<Task> tasks = taskMapper.getTasks(taskVO);
+
+        for (Task task : tasks) {
+            System.out.println(task);
+        }
+    }
 }
