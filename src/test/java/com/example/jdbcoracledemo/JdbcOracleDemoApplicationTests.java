@@ -174,4 +174,23 @@ class JdbcOracleDemoApplicationTests {
 //            nextDay = nextDay.plusDays(1);
 //        }
     }
+
+    @Test
+    public void insert10000Source_1() {
+        LocalDate startDate = LocalDate.now();
+        LocalDate lastDay = startDate.plusDays(-1);
+
+        for (int i = 0; i < 10000; i++) {
+            java.util.Date date = java.sql.Date.valueOf(lastDay);
+
+            Source source = new Source(i + "", date, i + "");
+            sourceMapper.insert(source);
+            lastDay = lastDay.plusDays(-1);
+        }
+
+//        for (int i = 0; i < 30; i++) {
+//            System.out.println(lastDay);
+//            lastDay = lastDay.plusDays(-1);
+//        }
+    }
 }
