@@ -1,7 +1,9 @@
 package com.example.jdbcoracledemo;
 
+import com.example.jdbcoracledemo.dao.SourceMapper;
 import com.example.jdbcoracledemo.dao.TaskMapper;
 import com.example.jdbcoracledemo.dao.UserMapper;
+import com.example.jdbcoracledemo.pojo.Source;
 import com.example.jdbcoracledemo.pojo.Task;
 import com.example.jdbcoracledemo.pojo.TaskVO;
 import com.example.jdbcoracledemo.pojo.User;
@@ -11,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @SpringBootTest
@@ -63,7 +68,7 @@ class JdbcOracleDemoApplicationTests {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < ids.size(); i++) {
             stringBuilder.append(ids.get(i));
-            if(i<ids.size()-1){
+            if (i < ids.size() - 1) {
                 stringBuilder.append(",");
             }
         }
@@ -77,7 +82,7 @@ class JdbcOracleDemoApplicationTests {
 
         System.out.println(users);
         System.out.println(users.size());
-        System.out.println(end-start);
+        System.out.println(end - start);
     }
 
     @Test
@@ -89,7 +94,7 @@ class JdbcOracleDemoApplicationTests {
 
         System.out.println(users);
         System.out.println(users.size());
-        System.out.println(end-start);
+        System.out.println(end - start);
 
     }
 
@@ -101,7 +106,7 @@ class JdbcOracleDemoApplicationTests {
         List<User> users = userMapper.getByList3(ids);
         long end = System.currentTimeMillis();
 
-        System.out.println(end-start);
+        System.out.println(end - start);
         System.out.println(users);
         System.out.println(users.size());
 
@@ -115,11 +120,12 @@ class JdbcOracleDemoApplicationTests {
         List<User> users = userMapper.getByList4(ids);
         long end = System.currentTimeMillis();
 
-        System.out.println(end-start);
+        System.out.println(end - start);
         System.out.println(users);
         System.out.println(users.size());
 
     }
+
     private static List<Integer> getIds() {
         List<Integer> ids = new ArrayList<>();
         for (int i = 0; i < 4000; i++) {
@@ -131,11 +137,11 @@ class JdbcOracleDemoApplicationTests {
     }
 
 
-
     @Autowired
     TaskMapper taskMapper;
+
     @Test
-    public void getTasks(){
+    public void getTasks() {
         TaskVO taskVO = new TaskVO();
 
         taskVO.setChannel(0L);
@@ -145,5 +151,27 @@ class JdbcOracleDemoApplicationTests {
         for (Task task : tasks) {
             System.out.println(task);
         }
+    }
+
+    @Autowired
+    SourceMapper sourceMapper;
+
+    @Test
+    public void insert10000Source() {
+        LocalDate startDate = LocalDate.of(1998, 8, 21); // 设置特定日期，格式为年-月-日
+        LocalDate nextDay = startDate.plusDays(1);
+
+        for (int i = 0; i < 10000; i++) {
+            java.util.Date date = java.sql.Date.valueOf(nextDay);
+
+            Source source = new Source(i + "", date, i + "");
+            sourceMapper.insert(source);
+            nextDay = nextDay.plusDays(1);
+        }
+
+//        for (int i = 0; i < 30; i++) {
+//            System.out.println(nextDay);
+//            nextDay = nextDay.plusDays(1);
+//        }
     }
 }
