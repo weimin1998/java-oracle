@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.jdbcoracledemo.dao.UserLogMapper">
+    <resultMap id="BaseResultMap" type="com.example.jdbcoracledemo.pojo.UserLog">
+        <id column="id" jdbcType="VARCHAR" property="id"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="operation" jdbcType="VARCHAR" property="operation"/>
+        <result column="method" jdbcType="VARCHAR" property="method"/>
+        <result column="params" jdbcType="VARCHAR" property="params"/>
+        <result column="time" jdbcType="DATE" property="time"/>
+        <result column="ip" jdbcType="VARCHAR" property="ip"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, user_name, operation, method, params, time, ip
+    </sql>
+
+    <insert id="insert" parameterType="com.example.jdbcoracledemo.pojo.UserLog">
+        insert into ${tableName} (id, user_name, operation,
+        method, params, time,
+        ip)
+        values (#{userLog.id,jdbcType=VARCHAR}, #{userLog.userName,jdbcType=VARCHAR},
+        #{userLog.operation,jdbcType=VARCHAR},
+        #{userLog.method,jdbcType=VARCHAR}, #{userLog.params,jdbcType=VARCHAR}, #{userLog.time,jdbcType=DATE},
+        #{userLog.ip,jdbcType=VARCHAR})
+    </insert>
+
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from ${tableName}
+    </select>
+
+    <!--    查看指定的表是否存在-->
+    <select id="existTable" parameterType="String" resultType="Integer">
+
+        <!--xe 无法访问这个表-->
+        <!--select count(*)
+        from information_schema.TABLES
+        where table_name = #{tableName}
+-->
+        SELECT COUNT(*)
+        FROM USER_TABLES
+        WHERE TABLE_NAME = #{tableName}
+    </select>
+    <!-- 删除指定的表-->
+    <update id="dropTable">
+        DROP TABLE IF EXISTS ${tableName}
+    </update>
+    <!-- 创建新的日志表-->
+    <update id="createTable" parameterType="String">
+        CREATE TABLE ${tableName}
+        (
+        id varchar(20),
+        user_name varchar(50) ,
+        operation varchar(50) ,
+        method varchar(200) ,
+        params varchar(1000) ,
+        time date ,
+        ip varchar(64)
+        )
+    </update>
+</mapper>

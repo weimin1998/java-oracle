@@ -1,5 +1,6 @@
 package com.example.jdbcoracledemo;
 
+import com.example.jdbcoracledemo.dao.UserLogMapper;
 import com.example.jdbcoracledemo.dao.UserMapper;
 import com.example.jdbcoracledemo.pojo.User;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,9 @@ class JdbcOracleDemoApplicationTests {
     @Autowired
     UserMapper userMapper;
 
+    @Autowired
+    UserLogMapper userLogMapper;
+
 
     @Test
     public void testInsert() {
@@ -37,5 +41,27 @@ class JdbcOracleDemoApplicationTests {
         for (int i = 0; i < 10000; i++) {
             userMapper.insert(new User(i, "user" + i));
         }
+    }
+
+    @Test
+    public void addUserAndLog() {
+
+        User user = new User(1, "weimin");
+
+
+        // 插入
+        userMapper.insert(user);
+        // 添加用户时，创建日志存储表
+        Integer id = user.getId();
+        //定义用户日志表表名
+        String tableName = "t_user_log_" + id;
+        //查询表是否存在
+        if (userLogMapper.existTable(tableName) > 0) {
+            //删除用户对应的日志表
+            userLogMapper.dropTable(tableName);
+        }
+        //新创建表
+        userLogMapper.createTable(tableName);
+
     }
 }
