@@ -11,13 +11,4 @@ public interface UserMapper {
 
     User getById(Integer id);
 
-    List<User> getByList(@Param("ids") List<Integer> ids);
-
-    List<User> getByListStr(String listStr);
-
-    List<User> getByListTuple(@Param("ids") List<Integer> ids);
-
-    List<User> getByList3(@Param("ids") List<Integer> ids);
-
-    List<User> getByList4(@Param("ids") List<Integer> ids);
 }
